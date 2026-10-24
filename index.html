@@ -1,8 +1,9 @@
-<title>Kâğıt Kart</title>
+<title>纸艺卡丁车 · Kâğıt Kart</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <script type="importmap">
 { "imports": {
-  "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+  "three": "./vendor/three.module.js",
+  "three/addons/": "./vendor/addons/"
 } }
 </script>
 <style>
@@ -15,15 +16,15 @@
     box-shadow: 6px 6px 0 #2d2a32; font: 800 28px system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; text-align: center; }
   #kk-boot small { display: block; font: 700 14px system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; opacity: .7; margin-top: 4px; }
 </style>
-<div id="kk-root"><div id="kk-boot">Kâğıt Kart<small>sayfalar açılıyor…</small></div></div>
+<div id="kk-root"><div id="kk-boot">纸艺卡丁车<small>正在展开书页…</small></div></div>
 <script>
-  // A module graph that fails to load (CDN unreachable) or to link (no import maps) never runs main.js.
+  // A module graph that fails to load or link never runs main.js.
   addEventListener('error', function (e) {
     var card = document.getElementById('kk-boot');
     if (!card || card.dataset.failed || (window.__kk && window.__kk.ready)) return;
     if (e.target && e.target.tagName !== 'SCRIPT' && e.target !== window) return;
     card.dataset.failed = 'load';
-    card.lastChild.textContent = 'Oyun yüklenemedi. Bağlantını kontrol edip sayfayı yenile.';
+    card.lastChild.textContent = '游戏加载失败，请刷新页面重试。';
   }, true);
 </script>
 <script type="module" src="./src/main.js"></script>

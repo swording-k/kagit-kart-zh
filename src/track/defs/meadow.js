@@ -32,8 +32,8 @@ const P = layout({
 export default {
   id: 'meadow',
   chapter: 1,
-  name: 'Papatya Çayırı',
-  subtitle: 'Bahar sabahı, rüzgârgülleri ve dere',
+  name: '雏菊草原',
+  subtitle: '春日清晨，风车与溪流',
   laps: 3,
   points: P.points,
   halfWidth: P.halfWidth,

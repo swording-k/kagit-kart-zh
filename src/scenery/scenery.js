@@ -357,7 +357,7 @@ export function createScenery(game, def, track) {
     let accent = accents[1] ?? accents[0];
     if (ratio(accent, card) < 2.2) accent = accents.reduce((best, c) => (ratio(c, card) > ratio(best, card) ? c : best));
     const title = String(def.name || def.id).toLocaleUpperCase('tr');
-    const kicker = `${def.chapter ?? ''}. BÖLÜM`;
+    const kicker = `第 ${def.chapter ?? ''} 章`;
     let size = 150;
     if (typeof lettering.measureLettering === 'function') {
       const m = lettering.measureLettering(title, { size });

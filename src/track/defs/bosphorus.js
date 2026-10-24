@@ -32,8 +32,8 @@ const P = layout({
 export default {
   id: 'bosphorus',
   chapter: 2,
-  name: 'Boğaz Gecesi',
-  subtitle: 'Mavi saatten geceye, iki köprü',
+  name: '海峡之夜',
+  subtitle: '穿越两座桥，从蓝调时刻驶入夜色',
   laps: 3,
   points: P.points,
   halfWidth: P.halfWidth,

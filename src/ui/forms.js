@@ -4,18 +4,18 @@ import { FocusList } from './nav.js';
 
 const PENCIL_CIRCLE = `<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M9 25C5 9 88 2 95 17C99 31 24 39 7 27C2 19 30 5 66 7" fill="none" stroke="#d9483b" stroke-width="2.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
 
-const ON_OFF = [[true, 'Açık'], [false, 'Kapalı']];
+const ON_OFF = [[true, '开启'], [false, '关闭']];
 
 export const SETTING_ROWS = [
-  { key: 'musicVolume', label: 'Müzik', type: 'range' },
-  { key: 'sfxVolume', label: 'Efektler', type: 'range' },
-  { key: 'muted', label: 'Ses', type: 'mute', options: [[false, 'Açık'], [true, 'Kapalı']] },
-  { key: 'quality', label: 'Görüntü', options: [['auto', 'Otomatik'], ['high', 'Yüksek'], ['medium', 'Orta'], ['low', 'Düşük'], ['minimal', 'En düşük']] },
-  { key: 'reducedMotion', label: 'Hareketi azalt', options: [['auto', 'Sistem'], ['on', 'Açık'], ['off', 'Kapalı']] },
-  { key: 'cameraShake', label: 'Kamera sarsıntısı', options: ON_OFF },
-  { key: 'touchControls', label: 'Dokunmatik tuşlar', options: [['auto', 'Otomatik'], ['on', 'Açık'], ['off', 'Kapalı']] },
-  { key: 'autoAccelerate', label: 'Otomatik gaz', options: ON_OFF },
-  { key: 'showFps', label: 'FPS göster', options: ON_OFF },
+  { key: 'musicVolume', label: '音乐', type: 'range' },
+  { key: 'sfxVolume', label: '音效', type: 'range' },
+  { key: 'muted', label: '声音', type: 'mute', options: [[false, '开启'], [true, '关闭']] },
+  { key: 'quality', label: '画质', options: [['auto', '自动'], ['high', '高'], ['medium', '中'], ['low', '低'], ['minimal', '最低']] },
+  { key: 'reducedMotion', label: '减少动态效果', options: [['auto', '跟随系统'], ['on', '开启'], ['off', '关闭']] },
+  { key: 'cameraShake', label: '镜头震动', options: ON_OFF },
+  { key: 'touchControls', label: '触控按键', options: [['auto', '自动'], ['on', '开启'], ['off', '关闭']] },
+  { key: 'autoAccelerate', label: '自动加速', options: ON_OFF },
+  { key: 'showFps', label: '显示帧率', options: ON_OFF },
 ];
 
 export function createSettingsForm(ctx, { onBack }) {
@@ -89,32 +89,32 @@ export function createSettingsForm(ctx, { onBack }) {
 
 const CONTROLS = {
   keyboard: [
-    ['Direksiyon', [['k', '←'], ['k', '→'], ' ya da ', ['k', 'A'], ['k', 'D']]],
-    ['Gaz', [['k', '↑'], ['k', 'W']]],
-    ['Fren · geri', [['k', '↓'], ['k', 'S']]],
-    ['Drift · zıpla', [['k', 'Space'], ' basılı tut + yön']],
-    ['Eşya', [['k', 'X'], ['k', 'E'], ' · geriye: ', ['k', '↓'], '+', ['k', 'X']]],
-    ['Geri bak', [['k', 'C']]],
-    ['Duraklat', [['k', 'Esc'], ['k', 'P']]],
-    ['Ses', [['k', 'M']]],
-    ['Yeniden başla', [['k', 'R'], ' (Zamana Karşı)']],
+    ['转向', [['k', '←'], ['k', '→'], ' 或 ', ['k', 'A'], ['k', 'D']]],
+    ['加速', [['k', '↑'], ['k', 'W']]],
+    ['刹车 / 倒车', [['k', '↓'], ['k', 'S']]],
+    ['漂移 / 跳跃', [['k', 'Space'], ' 按住并转向']],
+    ['道具', [['k', 'X'], ['k', 'E'], ' · 向后投掷：', ['k', '↓'], '+', ['k', 'X']]],
+    ['向后看', [['k', 'C']]],
+    ['暂停', [['k', 'Esc'], ['k', 'P']]],
+    ['声音', [['k', 'M']]],
+    ['重新开始', [['k', 'R'], '（计时赛）']],
   ],
   gamepad: [
-    ['Direksiyon', ['Sol çubuk ya da yön tuşları']],
-    ['Gaz', [['p', 'A'], ['pw', 'RT']]],
-    ['Fren · geri', [['p', 'B'], ['pw', 'LT']]],
-    ['Drift · zıpla', [['pw', 'RB'], ' basılı tut + yön']],
-    ['Eşya', [['p', 'X'], ['pw', 'LB'], ' · geriye: fren + eşya']],
-    ['Geri bak', [['p', 'Y']]],
-    ['Duraklat', [['pw', 'Start']]],
+    ['转向', ['左摇杆或方向键']],
+    ['加速', [['p', 'A'], ['pw', 'RT']]],
+    ['刹车 / 倒车', [['p', 'B'], ['pw', 'LT']]],
+    ['漂移 / 跳跃', [['pw', 'RB'], ' 按住并转向']],
+    ['道具', [['p', 'X'], ['pw', 'LB'], ' · 向后投掷：刹车 + 道具']],
+    ['向后看', [['p', 'Y']]],
+    ['暂停', [['pw', 'Start']]],
   ],
   touch: [
-    ['Direksiyon', ['Sol başparmağını sağa sola kaydır']],
-    ['Gaz', [['k', 'GAZ'], ' basılı tut (ya da Oto gaz)']],
-    ['Drift · zıpla', [['k', 'DRIFT'], ' basılı tut + yön']],
-    ['Eşya', [['k', 'EŞYA'], ' ya da eşya penceresi']],
-    ['Fren · geri', [['k', 'FREN']]],
-    ['Duraklat', ['Üstteki ❚❚ düğmesi']],
+    ['转向', ['左手拇指左右滑动']],
+    ['加速', [['k', '油门'], ' 按住（也可开启自动加速）']],
+    ['漂移 / 跳跃', [['k', '漂移'], ' 按住并转向']],
+    ['道具', [['k', '道具'], ' 或点击道具栏']],
+    ['刹车 / 倒车', [['k', '刹车']]],
+    ['暂停', ['点击顶部 ❚❚ 按钮']],
   ],
 };
 
@@ -133,7 +133,7 @@ export function controlRows(device, filter = null) {
     .map(([label, parts]) => h('div', { class: 'kk-crow' }, h('span', null, label), h('div', null, glyphRow(parts))));
 }
 
-const DEVICES = [['keyboard', 'Klavye'], ['gamepad', 'Oyun kolu'], ['touch', 'Dokunmatik']];
+const DEVICES = [['keyboard', '键盘'], ['gamepad', '手柄'], ['touch', '触控']];
 
 export function createControlsForm(ctx, { onBack }) {
   let device = ctx.device();

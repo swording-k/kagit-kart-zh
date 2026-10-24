@@ -10,6 +10,10 @@ function isQuotaError(e) {
 
 export function createStorage() {
   const memory = new Map();
+  const pending = new Set();
+  const versions = new Map();
+  let cloud = false;
+  let queue = Promise.resolve();
 
   function ls() {
     try { return window.localStorage || null; } catch { return null; }
@@ -75,6 +79,7 @@ export function createStorage() {
   function set(key, value) {
     const k = PREFIX + key;
     memory.set(k, value);
+    markPending(key);
     try {
       const store = ls();
       if (!store) return true;
@@ -95,7 +100,72 @@ export function createStorage() {
     const k = PREFIX + key;
     memory.delete(k);
     try { ls()?.removeItem(k); } catch { /* ignored: memory copy already gone */ }
+    markPending(key);
   }
 
-  return { get, set, remove };
+  function markPending(key) {
+    pending.add(key);
+    versions.set(key, (versions.get(key) || 0) + 1);
+    try { ls()?.setItem(PREFIX + 'pending:' + key, '1'); } catch { /* memory remains usable */ }
+    if (cloud) flush(key);
+  }
+
+  function flush(key) {
+    queue = queue.then(async () => {
+      if (!cloud || !pending.has(key)) return;
+      const version = versions.get(key);
+      const value = get(key, null);
+      const response = await fetch(new URL('api/storage/' + encodeURIComponent(key), document.baseURI), {
+        method: value === null ? 'DELETE' : 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: value === null ? undefined : JSON.stringify({ value }),
+        credentials: 'same-origin',
+      });
+      if (!response.ok) throw new Error(`Cloud save failed: ${response.status}`);
+      if (versions.get(key) !== version) { flush(key); return; }
+      pending.delete(key);
+      try { ls()?.removeItem(PREFIX + 'pending:' + key); } catch { /* harmless */ }
+    }).catch(() => { cloud = false; });
+  }
+
+  async function connect() {
+    if (!location.pathname.startsWith('/kart/')) return;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2500);
+    try {
+      const response = await fetch(new URL('api/storage', document.baseURI), {
+        credentials: 'same-origin', signal: controller.signal,
+      });
+      if (!response.ok) return;
+      const { records } = await response.json();
+      if (!records || typeof records !== 'object') return;
+      const store = ls();
+      if (store) {
+        for (let i = 0; i < store.length; i++) {
+          const k = store.key(i);
+          if (k?.startsWith(PREFIX + 'pending:')) pending.add(k.slice((PREFIX + 'pending:').length));
+        }
+      }
+      for (const [key, value] of Object.entries(records)) {
+        if (pending.has(key)) continue;
+        memory.set(PREFIX + key, value);
+        try { store?.setItem(PREFIX + key, JSON.stringify(value)); } catch { /* cloud copy remains */ }
+      }
+      if (store) {
+        for (let i = 0; i < store.length; i++) {
+          const k = store.key(i);
+          if (k?.startsWith(PREFIX) && !k.startsWith(PREFIX + 'pending:')) {
+            const key = k.slice(PREFIX.length);
+            if (!(key in records)) pending.add(key);
+          }
+        }
+      }
+      cloud = true;
+      for (const key of pending) flush(key);
+    } catch { /* local storage is the offline fallback */ }
+    finally { clearTimeout(timeout); }
+  }
+
+  const ready = connect();
+  return { get, set, remove, ready };
 }

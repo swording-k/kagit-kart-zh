@@ -23,6 +23,10 @@ export const SOFTWARE_RE = /SwiftShader|llvmpipe|Software|Basic Render/i;
 let cached = null;
 export function loadPlaywright() {
   if (cached) return cached;
+  try {
+    cached = createRequire(import.meta.url)('playwright');
+    return cached;
+  } catch { /* Allow the original global installation as a fallback. */ }
   const root = execSync('npm root -g', { encoding: 'utf8' }).trim();
   const require = createRequire(path.join(root, 'noop.js'));
   cached = require('playwright');
@@ -49,13 +53,13 @@ export async function launch({ extraArgs = [], forceHeaded = false } = {}) {
   const { chromium } = loadPlaywright();
   const flags = [...GPU_FLAGS, ...STEADY_FLAGS, ...extraArgs];
   if (!forceHeaded) {
-    const browser = await chromium.launch({ headless: true, args: flags });
+    const browser = await chromium.launch({ headless: true, channel: process.env.KK_BROWSER || 'msedge', args: flags });
     const renderer = await probeRenderer(browser);
     if (!SOFTWARE_RE.test(renderer)) return { browser, mode: 'headless', flags, renderer };
     await browser.close();
   }
   const headedFlags = [...flags, '--window-position=-2400,0', '--window-size=1280,720'];
-  const browser = await chromium.launch({ headless: false, args: headedFlags });
+  const browser = await chromium.launch({ headless: false, channel: process.env.KK_BROWSER || 'msedge', args: headedFlags });
   const renderer = await probeRenderer(browser);
   return { browser, mode: 'headed-offscreen', flags: headedFlags, renderer };
 }

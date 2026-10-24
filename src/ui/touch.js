@@ -95,11 +95,11 @@ export function createTouch(ctx) {
     return { el: b, reset() { ids.clear(); b.classList.remove('is-down'); } };
   }
 
-  const gas = button('kk-tgas', 'GAZ', (on) => { state.throttle = on ? 1 : 0; });
-  const drift = button('kk-tdrift', [svg(DRIFT_ART), 'DRIFT'], (on) => { state.drift = on; });
-  const item = button('kk-titem', 'EŞYA', (on) => { state.item = on; });
-  const brake = button('kk-tbrake', 'FREN', (on) => { state.brake = on ? 1 : 0; });
-  const look = button('kk-tlook', h('small', null, 'GERİ BAK'), (on) => { state.lookBack = on; });
+  const gas = button('kk-tgas', '油门', (on) => { state.throttle = on ? 1 : 0; });
+  const drift = button('kk-tdrift', [svg(DRIFT_ART), '漂移'], (on) => { state.drift = on; });
+  const item = button('kk-titem', '道具', (on) => { state.item = on; });
+  const brake = button('kk-tbrake', '刹车', (on) => { state.brake = on ? 1 : 0; });
+  const look = button('kk-tlook', h('small', null, '回头看'), (on) => { state.lookBack = on; });
   const buttons = [gas, drift, item, brake, look];
 
   const auto = h('div', { class: 'kk-tbtn kk-tauto' });
@@ -118,7 +118,7 @@ export function createTouch(ctx) {
 
   function refresh() {
     const on = !!game.settings?.autoAccelerate;
-    auto.replaceChildren(h('small', null, on ? 'OTO GAZ: AÇIK' : 'OTO GAZ: KAPALI'));
+    auto.replaceChildren(h('small', null, on ? '自动油门：开' : '自动油门：关'));
     auto.classList.toggle('is-armed', on);
     gas.el.classList.toggle('is-auto', on);
   }

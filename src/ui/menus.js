@@ -10,20 +10,20 @@ const GEAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke=
 const PAD = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#2d2a32" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 8h12a4 4 0 0 1 4 4l-.6 4a2.5 2.5 0 0 1-4.4 1.2L15.5 15h-7L7 17.2a2.5 2.5 0 0 1-4.4-1.2L2 12a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/></g><circle cx="16" cy="11" r="1.1" fill="#2d2a32"/><circle cx="18" cy="13" r="1.1" fill="#2d2a32"/></svg>';
 const RULE_INK = '<svg viewBox="0 0 280 18" aria-hidden="true"><g stroke="#2d2a32" stroke-width="2" fill="none" opacity=".55"><path d="M0 9h118M162 9h118"/><path d="M140 2l7 7-7 7-7-7z" fill="#d9483b" stroke="none"/></g></svg>';
 
-export const STAT_LABELS = [['speed', 'Hız'], ['accel', 'İvme'], ['handling', 'Yol tutuş'], ['weight', 'Ağırlık'], ['offroad', 'Arazi']];
+export const STAT_LABELS = [['speed', '速度'], ['accel', '加速'], ['handling', '操控'], ['weight', '重量'], ['offroad', '越野']];
 
 const MODES = [
   // 'Prix' is French: written in capitals so the Turkish upper-casing leaves its I undotted
-  { id: 'gp', title: 'GRAND PRIX', text: 'Dört bölümlük kupa. Her yarış puan getirir.', tags: ['4 bölüm', 'puanlı'], plate: '#f2c14e' },
-  { id: 'single', title: 'Tek Yarış', text: 'Bir bölüm seç, yedi rakibe karşı yarış.', tags: ['1 bölüm', '8 sürücü'], plate: '#d9483b' },
-  { id: 'tt', title: 'Zamana Karşı', text: 'Tek başına, en iyi turunun hayaletine karşı.', tags: ['hayalet', 'rekor'], plate: '#5f7fa3' },
+  { id: 'gp', title: '大奖赛', text: '连续挑战四个章节，积累积分赢取奖杯。', tags: ['4 个章节', '积分赛'], plate: '#f2c14e' },
+  { id: 'single', title: '单场比赛', text: '选择一个章节，与七位对手竞速。', tags: ['1 个章节', '8 位车手'], plate: '#d9483b' },
+  { id: 'tt', title: '计时赛', text: '独自出发，挑战自己最快一圈的幽灵。', tags: ['幽灵', '纪录'], plate: '#5f7fa3' },
 ];
 
 const CLASSES = [
-  { cls: '80', plate: 'var(--rose)', name: 'İnce kâğıt', text: 'Sakin hız, bol düşünme payı.', color: '#f8f2e4', edge: ['#e7dcc2', '#d8cba9'], layers: 1, gauge: 1, curl: true },
-  { cls: '120', plate: 'var(--blue)', name: 'Defter kâğıdı', text: 'Asıl yarış burada başlıyor.', color: '#dfeaf0', edge: ['#b3c9d6', '#9db7c6'], layers: 3, gauge: 2, lined: true,
+  { cls: '80', plate: 'var(--rose)', name: '薄纸', text: '轻松起步，悠闲享受沿途风景。', color: '#f8f2e4', edge: ['#e7dcc2', '#d8cba9'], layers: 1, gauge: 1, curl: true },
+  { cls: '120', plate: 'var(--blue)', name: '笔记本纸', text: '恰到好处，真正的比赛从此开始。', color: '#dfeaf0', edge: ['#b3c9d6', '#9db7c6'], layers: 3, gauge: 2, lined: true,
     pattern: 'repeating-linear-gradient(180deg, transparent 0 1.4em, rgba(95,127,163,.42) 1.4em calc(1.4em + 1.5px)), linear-gradient(90deg, transparent 1.9em, rgba(217,72,59,.6) 1.9em calc(1.9em + 1.5px), transparent calc(1.9em + 1.5px))' },
-  { cls: '200', plate: 'var(--paper-hi)', name: 'Karton', text: 'Çok hızlı, hiç affetmez.', color: '#d6ad76', edge: ['#b88f58', '#a37b47'], layers: 8, gauge: 3,
+  { cls: '200', plate: 'var(--paper-hi)', name: '卡纸', text: '全速冲刺，考验每一次过弯。', color: '#d6ad76', edge: ['#b88f58', '#a37b47'], layers: 8, gauge: 3,
     pattern: 'radial-gradient(circle at 20% 30%, rgba(96,62,28,.4) 0 1px, transparent 1.6px) 0 0/13px 11px, radial-gradient(circle at 70% 60%, rgba(255,242,214,.45) 0 1px, transparent 1.6px) 0 0/17px 19px, radial-gradient(circle at 40% 80%, rgba(96,62,28,.25) 0 .5px, transparent 1.2px) 0 0/7px 9px' },
 ];
 
@@ -42,12 +42,12 @@ export function createMenus(ctx) {
   // ------------------------------------------------------------- title
   // The book on the desk is the cover now (cinematics' title shot draws it, title lettering included);
   // the DOM only adds a pinned paper tag and takes the click or tap anywhere on the screen.
-  const coverWrap = h('div', { class: 'kk-coverwrap kk-hit', role: 'button', 'aria-label': 'Kâğıt Kart: başlamak için dokun' });
+  const coverWrap = h('div', { class: 'kk-coverwrap kk-hit', role: 'button', 'aria-label': '纸艺卡丁车：点击开始' });
   const ctaGlyph = h('span', { 'data-glyph': 'confirm' });
   const cta = h('div', { class: 'kk-cover-cta' },
     h('i', { class: 'kk-tape' }),
-    sheet([h('span', null, 'Başlamak için dokun'), ctaGlyph], { dk: 1 }));
-  coverWrap.append(h('h1', { class: 'kk-sr' }, 'Kâğıt Kart'), cta);
+    sheet([h('span', null, '按 Enter 或点击开始'), ctaGlyph], { dk: 1 }));
+  coverWrap.append(h('h1', { class: 'kk-sr' }, '纸艺卡丁车'), cta);
   let coverState = 'closed';
 
   coverWrap.addEventListener('click', () => { if (coverState === 'closed') startGame(); });
@@ -93,12 +93,12 @@ export function createMenus(ctx) {
   }
 
   // ------------------------------------------------------------- screen scaffolding
-  const STEP_NAMES = [['mode', 'Mod'], ['class', 'Gramaj'], ['character', 'Sürücü'], ['track', 'Bölüm']];
+  const STEP_NAMES = [['mode', '模式'], ['class', '纸张'], ['character', '车手'], ['track', '章节']];
 
   function chrome(el, { title, kicker, back, step }) {
     if (back) {
       el.classList.add('kk-hasback');
-      const b = h('button', { class: 'kk-back kk-pop', 'aria-label': 'Geri' }, sheet(svg(BACK_ARROW), { dk: 4, rot: -2 }));
+      const b = h('button', { class: 'kk-back kk-pop', 'aria-label': '返回' }, sheet(svg(BACK_ARROW), { dk: 4, rot: -2 }));
       b.addEventListener('click', (e) => { if (e.detail !== 0) { ctx.click(); back(); } });
       el.appendChild(b);
     }
@@ -114,8 +114,8 @@ export function createMenus(ctx) {
           h('b', null, lt(String(i + 1), 'label', { colors: { fill: i === idx ? 'var(--mustard)' : i < idx ? 'var(--ink)' : 'var(--ink3)', shadow: i === idx ? 'rgba(0,0,0,.5)' : 'rgba(45,42,50,.2)' } })), label))));
     }
     const prompts = h('div', { class: 'kk-prompts' },
-      h('span', null, h('span', { 'data-glyph': 'confirm' }), 'Seç'),
-      back ? h('span', null, h('span', { 'data-glyph': 'back' }), 'Geri') : null);
+      h('span', null, h('span', { 'data-glyph': 'confirm' }), '选择'),
+      back ? h('span', null, h('span', { 'data-glyph': 'back' }), '返回') : null);
     el.appendChild(prompts);
   }
 
@@ -125,7 +125,7 @@ export function createMenus(ctx) {
   function buildMode() {
     const el = h('div', { class: 'kk-screen' });
     const back = () => ctx.api('setMenuScreen', 'title');
-    chrome(el, { title: 'Nasıl yarışalım?', kicker: 'Kâğıt Kart', back, step: 'mode' });
+    chrome(el, { title: '怎么比赛？', kicker: '纸艺卡丁车', back, step: 'mode' });
     const row = h('div', { class: 'kk-row' });
     const items = MODES.map((m, i) => {
       const card = popDelay(h('button', { class: 'kk-card kk-pop' },
@@ -146,7 +146,7 @@ export function createMenus(ctx) {
       mini.appendChild(b);
       return { el: b, confirm: () => ctx.api('setMenuScreen', target) };
     };
-    items.push(mk('Ayarlar', GEAR, 'settings', 0), mk('Kontroller', PAD, 'controls', 1));
+    items.push(mk('设置', GEAR, 'settings', 0), mk('操作说明', PAD, 'controls', 1));
     el.appendChild(mini);
     const focus = new FocusList(ctx, { onBack: back });
     const idx = Math.max(0, MODES.findIndex((m) => m.id === game.selection?.mode));
@@ -157,14 +157,14 @@ export function createMenus(ctx) {
   function buildClass() {
     const el = h('div', { class: 'kk-screen' });
     const back = () => ctx.api('setMenuScreen', 'mode');
-    chrome(el, { title: 'Kâğıt gramajı', kicker: 'Hız sınıfı', back, step: 'class' });
+    chrome(el, { title: '纸张重量', kicker: '速度等级', back, step: 'class' });
     const row = h('div', { class: 'kk-row' });
     const items = CLASSES.map((c, i) => {
       const shadows = [];
       for (let k = 1; k <= c.layers; k++) shadows.push(`${(k * 0.1).toFixed(2)}em ${(k * 0.1).toFixed(2)}em 0 ${c.edge[k % 2]}`);
       const L = c.layers * 0.1;
       shadows.push(`${(L + 0.28).toFixed(2)}em ${(L + 0.34).toFixed(2)}em 0 rgba(45,42,50,.85)`);
-      const gauge = h('div', { class: 'kk-gauge' }, up('Hız'), [1, 2, 3].map((n) => h('i', { class: n <= c.gauge ? 'on' : '' })));
+      const gauge = h('div', { class: 'kk-gauge' }, up('速度'), [1, 2, 3].map((n) => h('i', { class: n <= c.gauge ? 'on' : '' })));
       const face = h('div', { class: 'kk-face' + (c.lined ? ' is-lined' : ''), style: { background: c.pattern ? `${c.pattern}, ${c.color}` : c.color, boxShadow: shadows.join(','), transform: `rotate(${tilt(i + 2)}deg)` } },
         h('div', { class: 'kk-w' }, lt(c.cls, 'card', { colors: { plate: c.plate } }), h('small', null, 'g')),
         h('div', { class: 'kk-name' }, c.name),
@@ -188,7 +188,7 @@ export function createMenus(ctx) {
   function buildCharacter() {
     const el = h('div', { class: 'kk-screen' });
     const back = () => ctx.api('setMenuScreen', 'class');
-    chrome(el, { title: 'Sürücünü seç', kicker: 'Sürücü', back, step: 'character' });
+    chrome(el, { title: '选择你的车手', kicker: '车手', back, step: 'character' });
     const roster = ctx.roster();
     const nameLt = lt('');
     const nameEl = h('div', { class: 'kk-h' }, nameLt);
@@ -198,7 +198,7 @@ export function createMenus(ctx) {
       return { key, label, ticks };
     });
     el.appendChild(h('div', { class: 'kk-charinfo kk-pop' }, sheet([
-      h('div', { class: 'kk-kicker' }, up('Sürücü kartı')), nameEl, animalEl,
+      h('div', { class: 'kk-kicker' }, up('车手资料')), nameEl, animalEl,
       h('div', { class: 'kk-stats' }, statRows.map((s) => [h('span', null, s.label), s.ticks]))], { dk: 1 })));
     const strip = h('div', { class: 'kk-roster' });
     const chosen = game.selection?.characterId;
@@ -237,7 +237,7 @@ export function createMenus(ctx) {
     const el = h('div', { class: 'kk-screen' });
     const back = () => ctx.api('setMenuScreen', 'character', { characterId: game.selection?.characterId || 'tilki' });
     const tt = game.selection?.mode === 'tt';
-    chrome(el, { title: 'Bölüm seç', kicker: `${tt ? 'Zamana Karşı' : 'Tek Yarış'} · adım 4/4`, back });
+    chrome(el, { title: '选择章节', kicker: `${tt ? '计时赛' : '单场比赛'} · 第 4 / 4 步`, back });
     const defs = ctx.cup().map((id) => ctx.tracks()[id]).filter(Boolean);
     const numEl = h('div', { class: 'kk-kicker' });
     const titleLt = lt('');
@@ -258,15 +258,15 @@ export function createMenus(ctx) {
       return {
         el: tab,
         onFocus: () => {
-          numEl.textContent = up(`Bölüm ${d.chapter ?? i + 1}`);
+          numEl.textContent = up(`章节 ${d.chapter ?? i + 1}`);
           setLt(titleLt, d.name || d.id);
           subEl.textContent = d.subtitle || '';
           sketchEl.innerHTML = trackSketch(d.points);
           clear(bestEl);
           const best = tt ? ctx.best(d.id) : null;
           if (best && (best.lap || best.race)) {
-            if (best.race) bestEl.append(h('span', null, 'Rekor'), ctx.fmt(best.race));
-            if (best.lap) bestEl.append(h('span', null, 'En iyi tur'), ctx.fmt(best.lap));
+            if (best.race) bestEl.append(h('span', null, '最佳纪录'), ctx.fmt(best.race));
+            if (best.lap) bestEl.append(h('span', null, '最快单圈'), ctx.fmt(best.lap));
           }
           if (game.menuScreen === 'track') ctx.api('setMenuScreen', 'track', { trackId: d.id });
         },
@@ -287,11 +287,11 @@ export function createMenus(ctx) {
   function buildForm(kind) {
     const el = h('div', { class: 'kk-screen' });
     const back = () => ctx.api('setMenuScreen', 'mode');
-    chrome(el, { title: kind === 'settings' ? 'Ayarlar' : 'Kontroller', kicker: 'Kitabın ayarları', back });
+    chrome(el, { title: kind === 'settings' ? '设置' : '操作说明', kicker: '这本书的设置', back });
     const form = kind === 'settings' ? createSettingsForm(ctx, { onBack: back }) : createControlsForm(ctx, { onBack: back });
     el.querySelector('.kk-head').remove();
     el.appendChild(h('div', { class: 'kk-form kk-pop' }, sheet([
-      h('div', { class: 'kk-h' }, lt(kind === 'settings' ? 'Ayarlar' : 'Kontroller')), form.el], { dk: 2 })));
+      h('div', { class: 'kk-h' }, lt(kind === 'settings' ? '设置' : '操作说明')), form.el], { dk: 2 })));
     return { el, focus: form.focus, form };
   }
 
@@ -352,11 +352,11 @@ export function createIntroCard(ctx) {
   const def = game.trackDef || game.track?.def || {};
   const name = def.name || '';
   const card = h('div', { class: 'kk-intro kk-pop' }, sheet([
-    h('div', { class: 'kk-kicker' }, up(`Bölüm ${def.chapter ?? ''}`.trim())),
+    h('div', { class: 'kk-kicker' }, up(`章节 ${def.chapter ?? ''}`.trim())),
     h('div', { class: 'kk-h' }, lt(name)),
     svg(RULE_INK, 'kk-intro-rule'),
     def.subtitle ? h('p', null, def.subtitle) : null], { dk: 1 }));
-  const skip = h('button', { class: 'kk-skip kk-pop' }, sheet([h('span', { 'data-glyph': 'confirm' }), 'Geç'], { dk: 4, rot: 1.5 }));
+  const skip = h('button', { class: 'kk-skip kk-pop' }, sheet([h('span', { 'data-glyph': 'confirm' }), '跳过'], { dk: 4, rot: 1.5 }));
   el.append(card, skip);
   skip.addEventListener('click', (e) => { if (e.detail !== 0) { ctx.click(); ctx.api('skipCinematic'); } });
   ctx.glyphs(el);

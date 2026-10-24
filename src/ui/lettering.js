@@ -842,7 +842,36 @@ function metrics(L, P, size, ax, ay, k) {
  * misregister (em, with colors.plate), halftone, tabular (fixed-width digits), tracking (em) }.
  * Returns { width, height } of the painted box (ink + shadow) plus { left, top, advance, ascent, descent }.
  */
+const CJK_FONT = '"Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif';
+const hasCJK = (text) => /[\u3400-\u9fff]/u.test(String(text));
+let cjkMeasureContext;
+function measureCJK(text, opts = {}) {
+  cjkMeasureContext ||= document.createElement('canvas').getContext('2d');
+  const size = opts.size > 0 ? opts.size : 48;
+  cjkMeasureContext.font = `900 ${size}px ${CJK_FONT}`;
+  const advance = cjkMeasureContext.measureText(String(text)).width;
+  const x = opts.x || 0, y = opts.y || 0;
+  const left = x - (opts.align === 'center' ? advance / 2 : opts.align === 'right' ? advance : 0);
+  const top = y - (opts.baseline === 'top' ? 0 : opts.baseline === 'middle' ? size * .5 : size * .85);
+  return { width: advance + size * .08, height: size * 1.12, left, top, advance, ascent: size * .85, descent: size * .27 };
+}
+function drawCJK(ctx, text, opts) {
+  const size = opts.size > 0 ? opts.size : 48;
+  const m = measureCJK(text, opts);
+  const colors = opts.colors || {};
+  ctx.save();
+  ctx.font = `900 ${size}px ${CJK_FONT}`;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = colors.shadow || '#2d2a32';
+  ctx.fillText(String(text), m.left + size * .035, m.top + size * .89);
+  ctx.fillStyle = (Array.isArray(colors.fill) ? colors.fill[0] : colors.fill) || colors.ink || '#d9483b';
+  ctx.fillText(String(text), m.left, m.top + size * .85);
+  ctx.restore();
+  return m;
+}
+
 export function drawLettering(ctx, text, opts = {}) {
+  if (hasCJK(text)) return drawCJK(ctx, text, opts);
   const st = styleOf(opts);
   const size = opts.size > 0 ? opts.size : 48;
   const L = layoutOf(text, st, opts);
@@ -873,6 +902,7 @@ export function drawLettering(ctx, text, opts = {}) {
 
 /** Same box drawLettering would paint, relative to the anchor x = y = 0 (opts.x / opts.y ignored). */
 export function measureLettering(text, opts = {}) {
+  if (hasCJK(text)) return measureCJK(text, opts);
   const st = styleOf(opts);
   const size = opts.size > 0 ? opts.size : 48;
   const L = layoutOf(text, st, opts);
@@ -901,6 +931,20 @@ function dOf(inst, ox, oy) {
  * Colours may be any CSS colour, including var(--x) and currentColor.
  */
 export function letteringElement(text, opts = {}) {
+  if (hasCJK(text)) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    span.className = 'kk-cjk-lettering';
+    const colors = opts.colors || {};
+    Object.assign(span.style, {
+      fontFamily: CJK_FONT, fontWeight: '900', display: 'inline-block',
+      lineHeight: '1.2', letterSpacing: '.035em',
+      color: typeof colors.fill === 'string' ? colors.fill : colors.ink || 'currentColor',
+      textShadow: opts.style === 'label' ? '.025em .035em 0 rgba(45,42,50,.25)' : '.045em .055em 0 ' + (colors.shadow || '#2d2a32'),
+    });
+    if (opts.size > 0) span.style.fontSize = opts.size + 'px';
+    return span;
+  }
   const st = styleOf(opts);
   const L = layoutOf(text, st, opts);
   const P = paintOf(opts, st);

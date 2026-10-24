@@ -1,0 +1,20 @@
+[Unit]
+Description=Paper Kart game and save API
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/kagit-kart
+Environment=KART_DATA_DIR=/home/ubuntu/kagit-kart-data
+Environment=KART_PORT=8790
+Environment=KART_ORIGIN=https://yanchuan.online
+ExecStart=/home/ubuntu/reflection-runtime/node-v24.14.0-linux-x64/bin/node server/index.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=full
+ReadWritePaths=/home/ubuntu/kagit-kart-data
+
+[Install]
+WantedBy=multi-user.target

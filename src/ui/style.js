@@ -520,6 +520,7 @@ ${dkFine}
   .kk-touch-race .kk-tauto{left:calc(1em + var(--sal)); top:calc(11.4em + var(--sat))}
   /* portrait race: the top row only fits slot, place and lap; pause goes under the lap panel, the map below it */
   .kk-touch-race .kk-tpause{left:auto; right:calc(1.2em + var(--sar)); top:calc(6.4em + var(--sat)); margin-left:0}
+  .kk-touch-race .kk-hud-br{top:calc(6.4em + var(--sat))}
   .kk-touch-race .kk-hud-bl{top:calc(11em + var(--sat))}
   /* the controls card sits under the top row, the countdown numerals below it over the road */
   .kk-touch-race .kk-teach{top:calc(16.5em + var(--sat)); width:calc(100% - 2em)}

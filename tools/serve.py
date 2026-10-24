@@ -50,6 +50,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         path = self.path.split('?', 1)[0].split('#', 1)[0]
+        if path == '/favicon.ico':
+            self.send_response(302)
+            self.send_header('Location', '/favicon.svg')
+            self.end_headers()
+            return
         if path in ('/', '/index.html'):
             with open(os.path.join(ROOT, 'index.html'), 'r', encoding='utf-8') as f:
                 body = (HEAD + f.read() + TAIL).encode('utf-8')

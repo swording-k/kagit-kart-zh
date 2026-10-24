@@ -174,7 +174,7 @@ export function createStage(game) {
 
   const chapterOf = (key) => {
     const d = TRACKS[key] || TRACKS[CUP[0]] || {};
-    return { key: d.id || key || 'meadow', chapter: d.chapter || 1, title: d.name || 'Papatya Çayırı' };
+    return { key: d.id || key || 'meadow', chapter: d.chapter || 1, title: d.name || '雏菊草原' };
   };
   let chapterKey = TRACKS[game.selection?.trackId] ? game.selection.trackId : CUP[0];
   const prints = paintPages({ halfDepth: BOOK.halfD, chapter: chapterOf(chapterKey) });

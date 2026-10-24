@@ -40,8 +40,8 @@ const P = layout({
 export default {
   id: 'desk',
   chapter: 4,
-  name: 'Yazı Masası',
-  subtitle: 'Kitaptan çıkıp okurun masasına',
+  name: '写字台',
+  subtitle: '驶出书页，探索桌上的奇妙世界',
   laps: 3,
   points: P.points,
   halfWidth: P.halfWidth,

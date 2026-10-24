@@ -31,8 +31,8 @@ const P = layout({
 export default {
   id: 'glacier',
   chapter: 3,
-  name: 'Buzul Geçidi',
-  subtitle: 'Pembe gün doğumunda dağ geçidi',
+  name: '冰川隘口',
+  subtitle: '粉色晨光中的冰雪山口',
   laps: 3,
   points: P.points,
   halfWidth: P.halfWidth,

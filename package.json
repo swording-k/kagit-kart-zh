@@ -1,0 +1,14 @@
+{
+  "name": "kagit-kart-local",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python tools/serve.py 8765",
+    "test:race": "node tools/playtest.mjs --tracks all --laps 3 --fps-window 3 --time-scale 16",
+    "test:local": "node tools/verify-local.mjs",
+    "test:modes": "node tools/verify-modes.mjs",
+    "test:storage": "node --test server/storage.test.mjs",
+    "test:cloud": "node tools/verify-cloud.mjs"
+  },
+  "devDependencies": { "playwright": "1.56.1" }
+}

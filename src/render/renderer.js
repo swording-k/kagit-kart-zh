@@ -59,7 +59,7 @@ export function createRenderer(game, container) {
 
   const canvas = renderer.domElement;
   canvas.tabIndex = 0;
-  canvas.setAttribute('aria-label', 'Kâğıt Kart oyun alanı');
+  canvas.setAttribute('aria-label', '纸艺卡丁车游戏画面');
   container.appendChild(canvas);
 
   // Count shadow-pass draw calls separately (the pass runs inside renderer.render()).

@@ -27,7 +27,7 @@ import { createFX } from './fx/fx.js';
 import { createCinematics } from './cinematics/cinematics.js';
 import { installTestApi } from './test/testApi.js';
 
-document.documentElement.lang = 'tr';
+document.documentElement.lang = 'zh-CN';
 
 // 'setup' (startRace until intro) neither steps nor pauses, and every race entry ignores calls in it.
 const STEP_PHASES = new Set(['countdown', 'race', 'finishing', 'results']);
@@ -41,6 +41,7 @@ const SETTING_CHOICES = {
 
 const events = createEvents();
 const storage = createStorage();
+await storage.ready;
 
 // Stored settings may be old or foreign (the origin is shared): a field is kept only when it has the
 // default's type and lies in its domain, unknown keys are dropped.
@@ -83,6 +84,23 @@ const game = {
 };
 window.__kkGame = game;
 const test = installTestApi(game); // error capture as early as possible
+window.render_game_to_text = () => JSON.stringify({
+  coordinates: 'world: x right, y up, z forward; t normalized distance along circuit',
+  menu: game.menuScreen, mode: game.mode, track: game.trackDef?.id, selection: game.selection,
+  ...window.__kk.state(),
+});
+window.advanceTime = (ms) => {
+  if (!Number.isFinite(ms) || ms < 0 || ms > 60000) throw new RangeError('Expected milliseconds from 0 to 60000');
+  window.__kk.simulate(ms / 1000);
+  if (game.renderer) window.__kk.renderFrame();
+};
+addEventListener('keydown', async (e) => {
+  if (e.code !== 'KeyF' || e.repeat || e.ctrlKey || e.altKey || e.metaKey) return;
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await document.documentElement.requestFullscreen();
+  } catch (err) { console.warn('Fullscreen unavailable:', err.message); }
+});
 
 const root = document.getElementById('kk-root') || document.body;
 
@@ -762,7 +780,7 @@ function boot() {
     renderer = createRenderer(game, root);
   } catch (e) {
     const card = document.getElementById('kk-boot');
-    if (card) card.innerHTML = 'Kâğıt Kart<small>Bu tarayıcı WebGL2 desteklemiyor.</small>';
+    if (card) card.innerHTML = '纸艺卡丁车<small>当前浏览器不支持 WebGL2。</small>';
     console.error('[boot] WebGL renderer failed', e);
     return;
   }
@@ -820,8 +838,8 @@ function showBootFailure(e) {
   root.appendChild(card);
   const reason = String((e && e.message) || e || '').slice(0, 120);
   const small = document.createElement('small');
-  small.textContent = `Oyun başlatılamadı: ${reason}`;
-  card.replaceChildren('Kâğıt Kart', small);
+  small.textContent = `游戏无法启动：${reason}`;
+  card.replaceChildren('纸艺卡丁车', small);
 }
 
 try {

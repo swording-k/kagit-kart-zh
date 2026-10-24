@@ -94,7 +94,7 @@ export function createHUD(ctx) {
 
   // ------------------------------------------------------------- lap + clock
   const lapLt = lt('');
-  const lapEl = h('span', { class: 'kk-lap' }, h('small', null, up('Tur')), lapLt);
+  const lapEl = h('span', { class: 'kk-lap' }, h('small', null, up('圈数')), lapLt);
   const clock = createLetterCanvas('kk-clockc', { style: 'label', tabular: true, align: 'right', seed: 'clock', fit: 0.62,
     colors: { fill: '#2d2a32', shadow: 'rgba(45,42,50,.28)' } });
   const split = h('div', { class: 'kk-split' });
@@ -206,7 +206,7 @@ export function createHUD(ctx) {
 
   function countdown(n) {
     countEl?.remove();
-    const text = n > 0 ? String(n) : 'Başla!';
+    const text = n > 0 ? String(n) : '出发！';
     const num = h('div', { class: 'kk-count-num' + (n > 0 ? '' : ' is-go') },
       lt(text, 'light', { halftone: true, misregister: 0.04, colors: { plate: PLATES[n] || 'var(--red)' } }));
     countEl = h('div', { class: 'kk-count-wrap' }, num);
@@ -236,7 +236,7 @@ export function createHUD(ctx) {
   function wrongWay(on) {
     if (on && !wrongEl) {
       wrongEl = h('div', { class: 'kk-wrong-wrap' }, h('div', { class: 'kk-wrong' },
-        svg(WRONG_SIGN, 'kk-sign'), h('b', null, lt('Ters yön', 'card'))));
+        svg(WRONG_SIGN, 'kk-sign'), h('b', null, lt('逆行', 'card'))));
       center.appendChild(wrongEl);
     } else if (!on && wrongEl) {
       wrongEl.remove();
@@ -247,7 +247,7 @@ export function createHUD(ctx) {
   function finish(placeN) {
     finishEl?.remove();
     finishEl = h('div', { class: 'kk-finish' },
-      h('div', { class: 'kk-checker-wrap kk-slam' }, h('div', { class: 'kk-checker' }, lt('Bitiş!'))),
+      h('div', { class: 'kk-checker-wrap kk-slam' }, h('div', { class: 'kk-checker' }, lt('冲线！'))),
       h('div', { class: 'kk-grade' + (placeN <= 3 ? '' : ' is-meh') }, gradeLt(`${placeN}. oldun`, placeN > 3)));
     center.appendChild(finishEl);
   }
@@ -256,7 +256,7 @@ export function createHUD(ctx) {
   const flipLayer = h('div', { class: 'kk-layer' });
   function flip(lap) {
     if (ctx.reduced()) return;
-    const f = h('div', { class: 'kk-flip' }, h('i'), h('b', null, lt(`${lap}. tur`, 'card')));
+    const f = h('div', { class: 'kk-flip' }, h('i'), h('b', null, lt(`第 ${lap} 圈`, 'card')));
     flipLayer.appendChild(f);
     after(1.2, () => f.remove());
   }
@@ -438,17 +438,17 @@ export function createHUD(ctx) {
 
     onCountdown({ n }) { countdown(n); },
     onLap({ kart, lap }) { if (isMe(kart)) flip(lap); },
-    onFinalLap({ kart }) { if (isMe(kart)) banner('Son tur'); },
+    onFinalLap({ kart }) { if (isMe(kart)) banner('最后一圈'); },
     onWrongWay({ kart, on }) { if (isMe(kart)) wrongWay(!!on); },
     onFinish({ kart, place: pl }) { if (isMe(kart)) { wrongWay(false); finish(pl || kart.place); } },
     onInked({ kart, duration }) { if (isMe(kart)) splat(duration); },
     onThreat({ kart, kind, eta }) { if (isMe(kart)) onThreat(kind, eta); },
     onBoost({ kart, source, grade }) {
       if (!isMe(kart) || source !== 'start') return;
-      if (grade === 'perfect') tag('Harika çıkış!');
-      else if (grade === 'good') tag('İyi çıkış', 'is-meh');
+      if (grade === 'perfect') tag('完美起步！');
+      else if (grade === 'good') tag('漂亮起步', 'is-meh');
     },
-    onHit({ kart, cause }) { if (isMe(kart) && cause === 'burnout') tag('Motor boğuldu!', 'is-meh', 1.5); },
+    onHit({ kart, cause }) { if (isMe(kart) && cause === 'burnout') tag('起步过早！', 'is-meh', 1.5); },
     onPlace({ kart, place: pl }) { if (isMe(kart) && pl !== shownPlace) setPlace(pl, game.karts?.length || shownTotal || 8, true); },
     onCheckpoint({ kart, split: sp }) {
       if (!isMe(kart) || typeof sp !== 'number') return;
@@ -485,7 +485,7 @@ export function createHUD(ctx) {
       const waiting = game.phase === 'finishing' && typeof race.waitLeft === 'number' && race.waitLeft > 0;
       if (waiting) {
         if (!waitEl) { waitEl = h('div', { class: 'kk-wait' }); center.appendChild(waitEl); }
-        waitEl.textContent = `Diğer sürücüler bekleniyor · ${Math.ceil(race.waitLeft)} sn`;
+        waitEl.textContent = `等待其他车手 · ${Math.ceil(race.waitLeft)} 秒`;
       } else if (waitEl) { waitEl.remove(); waitEl = null; }
     },
   };

@@ -8,11 +8,11 @@ import { ROTATE_PHONE } from './icons.js';
 const G = (a) => h('span', { 'data-glyph': a });
 
 const TEXT = {
-  corner: () => ['Drift: ', G('drift'), ' basılı tut + yön'],
-  tier: () => ['Kıvılcım çıktı: ', G('drift'), ' bırak → turbo'],
-  ramp: () => ['Rampanın ucunda drift\'e bas ', G('drift')],
-  item: () => [G('item'), ' ile kullan, ', G('brake'), ' + ', G('item'), ' geriye at'],
-  portrait: () => [svg(ROTATE_PHONE, 'kk-rot'), 'Yatay çevirirsen daha iyi'],
+  corner: () => ['漂移：', G('drift'), ' 按住并转向'],
+  tier: () => ['出现火花后：', G('drift'), ' 松开 → 涡轮加速'],
+  ramp: () => ['在坡道边缘按漂移键 ', G('drift')],
+  item: () => [G('item'), ' 使用，', G('brake'), ' + ', G('item'), ' 向后投掷'],
+  portrait: () => [svg(ROTATE_PHONE, 'kk-rot'), '横屏游玩，视野更开阔'],
 };
 
 export function createHints(ctx) {
@@ -58,8 +58,8 @@ export function createHints(ctx) {
     if (!want) { hw.remove(); hw = null; return; }
     hw = h('div', { class: 'kk-hw', 'data-kk-hint': 'hwaccel', role: 'note', onclick: closeHw }, h('div', { class: 'kk-hint-in' },
       sheet([
-        h('span', null, 'Tarayıcında donanım hızlandırma kapalı görünüyor. Açarsan oyun çok daha akıcı olur (Ayarlar › Sistem › Donanım hızlandırma).'),
-        h('button', { class: 'kk-hw-x', 'aria-label': 'Kapat', onclick: closeHw }, '×'),
+        h('span', null, '当前浏览器未启用硬件加速，可在浏览器的“设置 › 系统”中开启以提高流畅度。'),
+        h('button', { class: 'kk-hw-x', 'aria-label': '关闭', onclick: closeHw }, '×'),
       ], { dk: 2 })));
     sysEl.appendChild(hw);
   }
@@ -89,11 +89,12 @@ export function createHints(ctx) {
 
   function openTeach() {
     if (teach || game.settings?.seenTutorial) return;
+    if (current?.key === 'portrait') { current.el.remove(); current = null; }
     const dev = ctx.device();
     teach = h('div', { class: 'kk-teach kk-pop' }, sheet([
-      h('div', { class: 'kk-kicker' }, 'İLK YARIŞ'),
-      h('div', { class: 'kk-h' }, lt('Nasıl sürülür?')),
-      controlRows(dev, ['Direksiyon', 'Gaz', 'Drift · zıpla', 'Eşya'])], { dk: 3 }));
+      h('div', { class: 'kk-kicker' }, '首次出发'),
+      h('div', { class: 'kk-h' }, lt('准备好出发了吗？')),
+      controlRows(dev, ['转向', '加速', '漂移 / 跳跃', '道具'])], { dk: 3 }));
     el.appendChild(teach);
     teachLeft = 7;
   }

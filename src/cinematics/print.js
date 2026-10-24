@@ -436,11 +436,11 @@ export function paintRightPage(c, chapter, halfDepth, seed = 7) {
     g.fill();
     g.restore();
     const [tx, ty] = P(9.2, 4.55);
-    drawLettering(g, 'Çevir', { x: tx, y: ty, size: 34, style: 'label', align: 'center', colors: { fill: '#d9483b', shadow: 'rgba(45,42,50,0.3)' }, seed: 9 });
+    drawLettering(g, '翻页', { x: tx, y: ty, size: 34, style: 'label', align: 'center', colors: { fill: '#d9483b', shadow: 'rgba(45,42,50,0.3)' }, seed: 9 });
 
     // chapter heading and the story column at the front, where the reader looks first
     const [hx, hy] = P(1.5, 5.35);
-    drawLettering(g, `${chapter.chapter}. Bölüm`, { x: hx, y: hy - 58, size: 28, style: 'label', colors: { fill: '#d9483b', shadow: 'rgba(45,42,50,0.35)' }, seed: 3 });
+    drawLettering(g, `第 ${chapter.chapter} 章`, { x: hx, y: hy - 58, size: 28, style: 'label', colors: { fill: '#d9483b', shadow: 'rgba(45,42,50,0.35)' }, seed: 3 });
     drawLettering(g, chapter.title, { x: hx, y: hy + 4, size: 62, style: 'cut', seed: 11 + chapter.chapter,
       colors: { fill: look.title, shadow: INK } });
     textBlock(g, 70, P(0, 6.1)[1], 560, 5, rand, { lineH: 24 });
@@ -764,16 +764,16 @@ export function paintCover(aspect, seed = 17) {
   g.restore();
 
   const cx = (fx0 + fx1) / 2;
-  goldText(g, 'AÇILIR KİTAP YARIŞI', cx, H * 0.125, 34, 11);
+  goldText(g, '立体书里的奇妙竞速', cx, H * 0.125, 34, 11);
   goldRule(g, cx, H * 0.155, W * 0.42);
   const fills = ['#f2c14e', '#d9483b', '#8fb3d9', '#e56b6f', '#faf4e4', '#9cc56b', '#f2c14e', '#d9483b', '#8fb3d9'];
-  drawLettering(g, 'Kâğıt', { x: cx, y: H * 0.37, size: 214, style: 'cut', align: 'center', seed: 7,
+  drawLettering(g, '纸艺', { x: cx, y: H * 0.37, size: 180, style: 'cut', align: 'center', seed: 7,
     colors: { fill: fills.slice(0, 5), shadow: '#10232a' } });
-  drawLettering(g, 'Kart', { x: cx + 12, y: H * 0.535, size: 214, style: 'cut', align: 'center', seed: 8,
+  drawLettering(g, '卡丁车', { x: cx + 12, y: H * 0.535, size: 180, style: 'cut', align: 'center', seed: 8,
     colors: { fill: fills.slice(5), shadow: '#10232a' } });
   goldRule(g, cx, H * 0.595, W * 0.5);
   kartCollage(g, cx + 20, H * 0.775, 1.12);
-  goldText(g, '4 BÖLÜM · 8 SÜRÜCÜ', cx, H * 0.915, 26, 8);
+  goldText(g, '4 个章节 · 8 位车手', cx, H * 0.915, 26, 8);
   return c;
 }
 

@@ -60,7 +60,8 @@ export function clear(el) {
 
 // Player-facing case changes must be Turkish-aware (i → İ, ı → I).
 export const up = (s) => String(s).toLocaleUpperCase('tr');
-export const cap = (s) => (s ? String(s)[0].toLocaleUpperCase('tr') + String(s).slice(1) : '');
+const ANIMALS = { tilki: '狐狸', 'kurbağa': '青蛙', penguen: '企鹅', 'ayı': '小熊', kedi: '小猫', 'baykuş': '猫头鹰', 'tavşan': '兔子', ahtapot: '章鱼' };
+export const cap = (s) => ANIMALS[s] || (s ? String(s)[0].toLocaleUpperCase('tr') + String(s).slice(1) : '');
 
 // Deterministic small tilts so cards look hand-placed but never jitter between renders.
 const TILTS = [-1.4, 0.8, -0.5, 1.2, -0.9, 0.4, -1.1, 0.7];
@@ -95,7 +96,7 @@ export function fmtTime(t) {
   const m = Math.floor(t / 60);
   const s = Math.floor(t % 60);
   const c = Math.floor((t * 100) % 100);
-  return `${m}:${String(s).padStart(2, '0')},${String(c).padStart(2, '0')}`;
+  return `${m}:${String(s).padStart(2, '0')}.${String(c).padStart(2, '0')}`;
 }
 
 export function fmtSplit(s) {

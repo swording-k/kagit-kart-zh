@@ -3,29 +3,29 @@
 // track) and one merged mesh of flat quads. Page text uses a system serif; nothing is downloaded.
 import * as THREE from 'three';
 
-const SERIF = 'Georgia, "Times New Roman", "Noto Serif", "DejaVu Serif", serif';
+const SERIF = '"Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif';
 
 const STORY = {
   meadow: [
-    'Bir varmış bir yokmuş, papatyaların boyunu aşmayan kâğıttan bir yol varmış. Sayfa her açıldığında tepeler doğrulur, çitler kalkar, rüzgâr kenarları hışırdatırmış.',
-    'Yol dönemeçlerde incelir, köprünün altında dere çağıldar. Dikkat et: çizginin dışına taşan, sayfanın kenarından düşer!',
+    '很久以前，雏菊花海里藏着一条纸做的小路。每次翻开书页，山丘便立起，篱笆沿着路边展开。',
+    '溪水从桥下流过，弯道越来越窄。留在赛道上，别从书页边缘跌落。',
   ],
   bosphorus: [
-    'Gece çökünce Boğaz’ın iki yakası mürekkep mavisine boyanırmış. Köprünün ışıkları suya düşer, vapurlar kâğıt dalgaların arasından süzülürmüş.',
-    'Yol kıyı boyunca kıvrılır; bir yanda deniz, bir yanda kubbeler. Keskin virajda yavaşlamayan soğuk suya dalar.',
+    '夜幕降临，海峡两岸染上墨蓝。桥上的灯火映在水面，纸船穿过层层波浪。',
+    '道路沿着海岸蜿蜒，一边是海，一边是圆顶。急弯前记得减速。',
   ],
   glacier: [
-    'Karlı geçit sabahları pembe bir ışıkla uyanırmış. Buz tutmuş göl ayna gibi parlar, çamlar kâğıt kanatlarını açarmış.',
-    'Buzun üstünde tekerler kayar. Uçurumun kenarı sayfanın kesik ucudur: aşağıda yalnızca masa vardır.',
+    '清晨的冰雪山口笼罩着粉色光芒。冰湖像镜子一样闪亮，纸松树迎风展开。',
+    '车轮在冰面上容易打滑。悬崖尽头就是书页的边缘，下面只有写字台。',
   ],
   desk: [
-    'Son bölümde yol kitabın dışına taşar ve okuyucunun masasına iner. Cetvel köprü olur, kurşunkalemler çit, ataşlar viraj.',
-    'Masanın kenarından bakınca kitap bir dağ gibi yükselir. Mürekkep kurumadan bitiş çizgisine!',
+    '最后一章，赛道冲出书本，延伸到写字台。尺子成了桥，铅笔成了护栏。',
+    '从桌边回望，书本像山一样高。趁墨迹还没干，冲过终点线。',
   ],
 };
 const STORY_DEFAULT = [
-  'Bu sayfada yeni bir yol başlar. Kâğıttan tepeler kalkar, çizgiler canlanır ve yarış bir sonraki sayfaya kadar sürer.',
-  'Okuyucu sayfayı çevirmeden önce sekiz sürücü son kez gaza basar.',
+  '翻开新的一页，纸山升起，墨线变成道路。比赛一直延续到下一页。',
+  '在读者再次翻页之前，八位车手一起踩下油门。',
 ];
 
 function luminance(c) {
@@ -33,6 +33,18 @@ function luminance(c) {
 }
 
 function wrapLines(g, text, width) {
+  if (/[\u3400-\u9fff]/u.test(text)) {
+    const lines = [];
+    let line = '';
+    for (const ch of text) {
+      if (line && g.measureText(line + ch).width > width) {
+        lines.push(line);
+        line = ch;
+      } else line += ch;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
   const words = text.split(' ');
   const lines = [];
   let line = '';
@@ -56,10 +68,14 @@ function paragraph(g, text, x, y, w, size) {
   const lead = size * 1.32;
   const rest = text.slice(1);
   const firstLines = wrapLines(g, rest, w - capW).slice(0, 2);
-  const used = firstLines.join(' ').length;
+  const used = firstLines.join(/[\u3400-\u9fff]/u.test(rest) ? '' : ' ').length;
   const lines = firstLines.map((l) => ({ t: l, x: x + capW, w: w - capW }))
     .concat(wrapLines(g, rest.slice(used).trim(), w).map((l) => ({ t: l, x, w })));
   lines.forEach((l, k) => {
+    if (/[\u3400-\u9fff]/u.test(l.t)) {
+      g.fillText(l.t, l.x, y + size + k * lead);
+      return;
+    }
     const words = l.t.split(' ');
     const last = k === lines.length - 1;
     const gapW = last || words.length < 2 ? g.measureText(' ').width
@@ -106,8 +122,8 @@ function drawCanvas(def, inkCss) {
     g.fillRect(x + w * 0.18, y + h * 0.8, w * 0.64, 3);
     g.textAlign = 'left';
   };
-  head('KÂĞIT KART', REGIONS.headL);
-  head((def.name || '').toLocaleUpperCase('tr'), REGIONS.headR);
+  head('纸 艺 卡 丁 车', REGIONS.headL);
+  head(def.name || '', REGIONS.headR);
   const chapter = def.chapter || 1;
   const left = 2 * (5 + 6 * chapter);
   const num = (n, [x, y, w, h]) => {
