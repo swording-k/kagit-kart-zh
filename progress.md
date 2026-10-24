@@ -21,4 +21,6 @@ Original prompt: 使用图片中适用的 Skill 和 REA 复刻 X 视频中的纸
 - 用户要求上传其 GitHub，将存档放在其腾讯云服务器，并返回自有域名链接。
 - 现有 `yanchuan.online` 根路径运行每日总结应用；游戏规划放在独立 `/kart/`，保留原站点和数据。
 - 已加云端 SQLite 存档服务、浏览器本地回退、独立 systemd 与 Nginx 路由示例；存储隔离与重启持久化测试通过。
-- 仍需完成真实服务器部署、线上验证、GitHub 推送；原项目无 LICENSE，版权风险应在交付中明确。
+- 私有 GitHub 仓库 `xuquanjun1-lab/kagit-kart-zh` 已创建并推送；原作完整历史保留为 upstream。
+- `test:storage`、`test:cloud`、`test:local`、`test:modes` 均通过。`develop-web-game` 客户端在 `/kart/` 完成实车截图，修复根 favicon 404 后无报错。
+- 真实服务器部署与线上验证待 SSH 公钥授权；原项目无 LICENSE，版权风险应在交付中明确。

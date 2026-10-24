@@ -281,6 +281,9 @@ async function main() {
   page.on("pageerror", (err) => {
     consoleErrors.ingest({ type: "pageerror", text: String(err) });
   });
+  page.on("response", (response) => {
+    if (response.status() >= 400) consoleErrors.ingest({ type: "http.error", text: `${response.status()} ${response.url()}` });
+  });
 
   await page.addInitScript({ content: makeVirtualTimeShim() });
   await page.goto(args.url, { waitUntil: "domcontentloaded" });

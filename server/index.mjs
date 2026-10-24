@@ -69,6 +69,7 @@ async function serveFile(res, pathname) {
 const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, origin);
+    if (url.pathname === '/favicon.ico') { res.writeHead(302, { Location: '/kart/favicon.svg' }); res.end(); return; }
     if (url.pathname === '/kart') { res.writeHead(308, { Location: '/kart/' }); res.end(); return; }
     if (!url.pathname.startsWith(mount)) return reply(res, 404, { error: 'not found' });
     if (url.pathname === '/kart/api/health') return reply(res, 200, { ok: true });
