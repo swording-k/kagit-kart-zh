@@ -32,3 +32,11 @@ Original prompt: 使用图片中适用的 Skill 和 REA 复刻 X 视频中的纸
 - 此预览存档位于本机 data/preview/kart.sqlite，尚未迁移腾讯云；正式域名部署仍被 SSH 登录授权阻塞。
 - 已通过公网健康检查、桌面/手机浏览器加载、会话隔离、存档写入与刷新恢复；develop-web-game 客户端通过公网进入实车比赛并验证加速、转向及漂移，截图与状态保存在 tools/out/skill-public-preview/，无控制台或资源错误。
 - tools/verify-cloud.mjs 现支持 KART_TEST_URL，以复用相同验证检查真实部署。
+
+## 正式部署完成（2026-10-24）
+
+- 通过 screenshot 技能检查桌面后，直接操作已登录的 OrcaTerm 登记部署公钥。旧密钥需要口令，重新生成 kart_cloud 后完成 SSH 登录；私钥仅留在本机 .ssh 中。
+- 游戏已上传至腾讯云 43.129.201.110 的 /home/ubuntu/kagit-kart；独立 kart.service 监听 127.0.0.1:8790，已设置开机启动。
+- 正式链接：https://yanchuan.online/kart/ 。云存档数据库 /home/ubuntu/kagit-kart-data/kart.sqlite，目录权限 0700。正式部署不依赖本机临时预览。
+- 修改前备份 Nginx 至 /var/backups/kart/daily-reflection-20261024T092452Z.conf，语法验证成功后 reload，仅增加 /kart 跳转及 /kart/ 代理。
+- 正式域名桌面/手机加载、云存档读写/刷新恢复、不同会话隔离均通过，浏览器无页面或资源错误。线上重启 kart 后存档仍可读取；跨站写入 403、私有源码路径 404、/kart 跳转 308 均通过。原日记应用 /api/health 和 nginx、daily-reflection 服务均正常。

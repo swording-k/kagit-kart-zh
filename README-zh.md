@@ -1,5 +1,7 @@
 # 纸艺卡丁车（Kâğıt Kart）本地中文版
 
+在线游戏：[https://yanchuan.online/kart/](https://yanchuan.online/kart/)。已于 2026-10-24 部署到用户腾讯云服务器，游戏和云存档均由服务器提供，不依赖开发电脑或临时隧道。源码保存在私有仓库 [xuquanjun1-lab/kagit-kart-zh](https://github.com/xuquanjun1-lab/kagit-kart-zh)。
+
 双击 [开始游戏.cmd](开始游戏.cmd) 启动；脚本会在 8765–8775 之间选择可用端口并打开浏览器。也可运行 `python tools/serve.py 8765`，访问 `http://127.0.0.1:8765/`。需要 Python 3 和支持 WebGL2 的现代浏览器。运行游戏不需要联网，也不需要运行 `npm install`。
 
 ## 内容与操作
@@ -25,6 +27,8 @@
 `server/index.mjs` 使用 Node.js 24 内置 SQLite，监听 `127.0.0.1:8790`，仅开放 `/kart/` 游戏资源和 `/kart/api/storage`。数据目录通过 `KART_DATA_DIR` 设置，应与代码分离并定期备份；服务器示例为 `/home/ubuntu/kagit-kart-data`。`KART_ORIGIN` 必须与正式 HTTPS 域名一致。`deploy/kart.service` 和 `deploy/nginx-location.conf` 分别是独立 systemd 服务和既有 Nginx HTTPS 站点内的路径代理配置。先备份原 Nginx 配置，再加入 location，执行 `nginx -t` 验证后重载，不替换原站点。
 
 浏览器首次访问会获得仅限 `/kart/` 的 HttpOnly、SameSite Cookie。写入请求校验 Origin、键名和体积；每个会话最多 100 条记录。`npm run test:storage` 验证服务重启持久化、会话隔离、跨站写入和文件路径限制。云端连接失败时游戏仍可使用浏览器本地存档，待下一次访问重试同步。
+
+正式部署：`/home/ubuntu/kagit-kart` 保存游戏代码，`/home/ubuntu/kagit-kart-data/kart.sqlite` 保存存档；systemd 服务为 `kart.service`，已启用开机启动。Nginx 现有站点增加 `/kart/` 代理，原配置备份位于 `/var/backups/kart/daily-reflection-20261024T092452Z.conf`。已在线验证健康检查、桌面和手机加载、存档读写与服务重启持久化、会话隔离、跨站写入拒绝及原日记站点健康检查。
 
 ## REA 与 Skill
 
