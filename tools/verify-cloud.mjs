@@ -3,7 +3,7 @@ import { mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
-const base = 'http://127.0.0.1:8790/kart/';
+const base = process.env.KART_TEST_URL || 'http://127.0.0.1:8790/kart/';
 const out = new URL('../tools/out/', import.meta.url);
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ channel: 'msedge', headless: true, args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] });

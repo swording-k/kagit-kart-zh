@@ -24,3 +24,11 @@ Original prompt: 使用图片中适用的 Skill 和 REA 复刻 X 视频中的纸
 - 私有 GitHub 仓库 `xuquanjun1-lab/kagit-kart-zh` 已创建并推送；原作完整历史保留为 upstream。
 - `test:storage`、`test:cloud`、`test:local`、`test:modes` 均通过。`develop-web-game` 客户端在 `/kart/` 完成实车截图，修复根 favicon 404 后无报错。
 - 真实服务器部署与线上验证待 SSH 公钥授权；原项目无 LICENSE，版权风险应在交付中明确。
+
+## 临时公网预览（2026-10-24）
+
+- 用户要求先交付可访问链接；通过 Cloudflare Quick Tunnel 暴露独立游戏服务 127.0.0.1:8791，未暴露目录或其他本机应用。
+- 地址：https://bio-agreements-merit-outreach.trycloudflare.com/kart/ 。依赖当前电脑与 tunnel/server 进程运行，不保证永久可用。
+- 此预览存档位于本机 data/preview/kart.sqlite，尚未迁移腾讯云；正式域名部署仍被 SSH 登录授权阻塞。
+- 已通过公网健康检查、桌面/手机浏览器加载、会话隔离、存档写入与刷新恢复；develop-web-game 客户端通过公网进入实车比赛并验证加速、转向及漂移，截图与状态保存在 tools/out/skill-public-preview/，无控制台或资源错误。
+- tools/verify-cloud.mjs 现支持 KART_TEST_URL，以复用相同验证检查真实部署。
