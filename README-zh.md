@@ -16,7 +16,7 @@
 
 ## 来源与实现
 
-参考视频：[X 上的纸艺卡丁车展示](https://x.com/jackson77li/status/2111969961875042425?s=46)。进一步定位到原作者 Burak Erdemci 的[完整项目](https://github.com/BurakErdemci/kagit-kart)，本地基线提交为 `da100b21ae1c5332d2843d21a9bb7b68b97e9c2a`。本交付基于公开源码做本地中文化与离线适配，**不是**从视频反编译出的原始代码，也不是独立重写。原项目未附许可证；保留原作者、README 和架构文档。未经权利人许可，重新发布或商用存在版权风险。
+创意参考视频：[Paper Kart](https://x.com/jackson77li/status/2111969961875042425?s=46)。本项目在视频创意参考上完成中文化改编，并加入键盘与触控优化、离线运行支持、服务器云存档及配套验证等新内容；本项目改编、扩展与部署部分的代码实现使用 Kiro 完成。代码基于原作者 Burak Erdemci 的[公开项目](https://github.com/BurakErdemci/kagit-kart)，本地基线提交为 `da100b21ae1c5332d2843d21a9bb7b68b97e9c2a`；上游原始代码由其原作者编写，因此本项目是基于上游的原创改编与扩展，并非全部从零编写，也不是从视频反编译出的原始代码。原项目未附许可证；保留原作者、README 和架构文档。未经权利人许可，重新发布或商用存在版权风险。
 
 原作的详细模块契约见 [ARCHITECTURE.md](ARCHITECTURE.md)。主要实现路径：`src/main.js` 管理状态机与比赛生命周期；`src/kart/` 管理车辆物理、碰撞和幽灵；`src/track/`、`src/scenery/` 生成赛道及布景；`src/ai/`、`src/items/`、`src/race/` 负责 AI、道具和比赛规则；`src/render/`、`src/characters/`、`src/cinematics/` 实现纸艺画面；`src/ui/` 和 `src/input/` 实现菜单、HUD 与输入；`src/audio/` 程序合成音效。纹理、模型、音乐和字体形状主要在运行时生成，唯一渲染库 Three.js 0.186.0 已放在 `vendor/`，其许可证见 `vendor/THREE-LICENSE.txt`。
 
