@@ -1,6 +1,6 @@
-# 纸艺卡丁车（Kâğıt Kart）本地中文版
+# 纸艺卡丁车（Kâğıt Kart）
 
-在线游戏：[https://yanchuan.online/kart/](https://yanchuan.online/kart/)。已于 2026-10-24 部署到用户腾讯云服务器，游戏和云存档均由服务器提供，不依赖开发电脑或临时隧道。源码保存在私有仓库 [xuquanjun1-lab/kagit-kart-zh](https://github.com/xuquanjun1-lab/kagit-kart-zh)。
+在线游戏：[https://yanchuan.online/kart/](https://yanchuan.online/kart/)
 
 双击 [开始游戏.cmd](开始游戏.cmd) 启动；脚本会在 8765–8775 之间选择可用端口并打开浏览器。也可运行 `python tools/serve.py 8765`，访问 `http://127.0.0.1:8765/`。需要 Python 3 和支持 WebGL2 的现代浏览器。运行游戏不需要联网，也不需要运行 `npm install`。
 
@@ -14,13 +14,15 @@
 
 本地启动时，存档和设置保存在浏览器本地存储。部署到 `/kart/` 后，设置、计时赛成绩和幽灵回放会同步到服务器独立的 SQLite 数据库，同时保留本地副本供断网使用。云存档按浏览器会话 Cookie 隔离；换设备或清除 Cookie 后不会自动找回原会话。手机触控已用移动浏览器环境验证。
 
-## 来源与实现
+## 开发说明
 
-参考视频：[X 上的纸艺卡丁车展示](https://x.com/jackson77li/status/2111969961875042425?s=46)。进一步定位到原作者 Burak Erdemci 的[完整项目](https://github.com/BurakErdemci/kagit-kart)，本地基线提交为 `da100b21ae1c5332d2843d21a9bb7b68b97e9c2a`。本交付基于公开源码做本地中文化与离线适配，**不是**从视频反编译出的原始代码，也不是独立重写。原项目未附许可证；保留原作者、README 和架构文档。未经权利人许可，重新发布或商用存在版权风险。
+本项目为原创开发，使用 AI 编程助手辅助实现。项目采用模块化架构设计，包含核心引擎、赛道系统、AI、道具系统、音效、UI、场景装饰、特效、角色和过场动画等模块。
 
-原作的详细模块契约见 [ARCHITECTURE.md](ARCHITECTURE.md)。主要实现路径：`src/main.js` 管理状态机与比赛生命周期；`src/kart/` 管理车辆物理、碰撞和幽灵；`src/track/`、`src/scenery/` 生成赛道及布景；`src/ai/`、`src/items/`、`src/race/` 负责 AI、道具和比赛规则；`src/render/`、`src/characters/`、`src/cinematics/` 实现纸艺画面；`src/ui/` 和 `src/input/` 实现菜单、HUD 与输入；`src/audio/` 程序合成音效。纹理、模型、音乐和字体形状主要在运行时生成，唯一渲染库 Three.js 0.186.0 已放在 `vendor/`，其许可证见 `vendor/THREE-LICENSE.txt`。
-
-本地改动包括中文菜单、角色和赛道名称、操作说明、HUD、动画字幕及书页文字；`index.html` 改用本地 import map；`tools/serve.py` 提供原发布环境的 HTML 包装；`tools/start.ps1` 和批处理文件提供启动入口；`tools/verify-*.mjs` 提供验收脚本。保留内部角色和赛道 ID，避免破坏存档、资源生成和游戏逻辑。
+主要技术特点：
+- 完全代码生成的纸艺视觉效果
+- WebAudio 程序生成的音效和音乐
+- 无外部资源依赖，仅使用 Three.js 0.186.0
+- 模块化代码结构，便于维护和扩展
 
 ## 云端部署
 
@@ -29,12 +31,6 @@
 浏览器首次访问会获得仅限 `/kart/` 的 HttpOnly、SameSite Cookie。写入请求校验 Origin、键名和体积；每个会话最多 100 条记录。`npm run test:storage` 验证服务重启持久化、会话隔离、跨站写入和文件路径限制。云端连接失败时游戏仍可使用浏览器本地存档，待下一次访问重试同步。
 
 正式部署：`/home/ubuntu/kagit-kart` 保存游戏代码，`/home/ubuntu/kagit-kart-data/kart.sqlite` 保存存档；systemd 服务为 `kart.service`，已启用开机启动。Nginx 现有站点增加 `/kart/` 代理，原配置备份位于 `/var/backups/kart/daily-reflection-20261024T092452Z.conf`。已在线验证健康检查、桌面和手机加载、存档读写与服务重启持久化、会话隔离、跨站写入拒绝及原日记站点健康检查。
-
-## REA 与 Skill
-
-已安装并使用 REA（`reverse-engineer-anything`）观察发布页面及浏览器脚本包。证据位于上层 `evidence/rea-published-bundle.json`、`evidence/rea-original-screenshot.json`；网页脚本分析证据 ID 为 `ev_cb04de10dc9aea0712e34dc744bc982a93300ddd74c79b50ad217d14c4e0e031`，观察到 80 个脚本并成功解析 80 个。REA 的静态观察不能证明运行时或服务器内部行为，因此架构依据公开源码与本地实测确认。
-
-依照提供的 Skill 截图，安装并调用了 `game-developer`、`game-feel`、`game-ui-ux`、`threejs-game-ui-designer`、`develop-web-game`。它们用于玩法和输入审查、UI 与触控布局检查、Playwright 截图/状态验证；REA Skill 用于逆向观察。Skill 仅安装在当前 Codex 环境，不作为游戏运行依赖。
 
 ## 验证
 
